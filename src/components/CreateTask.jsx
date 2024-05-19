@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 
 function CreateTask() {
   const boardTitleRef = useRef();
-  const [boardTitle, setBoardTitle] = useState("");
+  const [boards, setBoards] = useState([]);
   const [createNewBoard, setCreateNewBoard] = useState(false);
 
   function handleNewBoard() {
@@ -10,16 +10,15 @@ function CreateTask() {
   }
 
   function handleCreate() {
-    setBoardTitle(boardTitleRef.current.value);
+    setBoards((pervBoards) => {
+      return [...pervBoards, boardTitleRef.current.value];
+    });
   }
 
   return (
     <div className="flex gap-2">
-      <button className="p-4 bg-slate-300 rounded-lg" onClick={handleNewBoard}>
-        Create new board
-      </button>
-      {createNewBoard && (
-        <div className="absolute flex flex-col p-4 bg-slate-300 rounded-lg">
+      {createNewBoard ? (
+        <div className="flex flex-col p-4 bg-slate-300 rounded-lg">
           <label htmlFor="boardTitle">Board title</label>
           <input id="boardTitle" ref={boardTitleRef} />
           <button
@@ -29,7 +28,19 @@ function CreateTask() {
             Create
           </button>
         </div>
+      ) : (
+        <button
+          className="p-4 bg-slate-300 rounded-lg"
+          onClick={handleNewBoard}
+        >
+          Create new board
+        </button>
       )}
+      {boards.map((board) => (
+        <div key={board} className="p-4 bg-slate-300">
+          {board}
+        </div>
+      ))}
     </div>
   );
 }
